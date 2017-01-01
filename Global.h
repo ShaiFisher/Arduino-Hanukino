@@ -50,15 +50,12 @@
 #include "RGBLed.h"
 #include "Button.h"
 #include "LED.h"
-#include "MyLed.h"
 #include "Switchable.h"
 #include <Servo.h>
 #include "TimerFreeTone.h"
 #include "Speaker.h"
 
-//extern RGBLed rgbLed;
 extern Button pushButton;
-//extern LED led;
 extern LED led1;
 extern LED led2;
 extern LED led3;

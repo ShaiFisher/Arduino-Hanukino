@@ -29,7 +29,7 @@ unsigned int piezoYevanim1Melody[]     = {C13,F18,G20,GS21, AS23,GS21,GS21, AS23
 unsigned int piezoYevanim1Durations[]  = {4 ,  4 , 4 ,  4 , 4 ,   2 ,   2 ,  4 ,  4 ,  4 ,  4 ,  2 ,   2,   2 ,  4,  4,   2 ,  4, 4 ,    4 , 4 , 4, 4};
 unsigned int piezoYevanim2Length       = 20;
 unsigned int piezoYevanim2Melody[]     = {F18,G20,GS21,AS23,C25,C25, F30,F30, DS28,CS26,C25, 0, C25,F30,F30, DS28, F30,DS28,CS26,C25};
-unsigned int piezoYevanim2Durations[]  = { 4 , 4 , 4 ,  4 ,  2 , 2 ,  4 , 4 ,  4 ,  4 ,  2,  2,  8 , 2 , 2 ,  8 ,   4 , 4 ,  2 , 2};
+unsigned int piezoYevanim2Durations[]  = { 4 , 4 , 4 ,  4 ,  2 , 2 ,  4 , 4 ,  4 ,  4 ,  2,  2,  8 , 2 , 2 ,  4 ,   4 , 4 ,  4 , 2};
 unsigned int piezoYevanim3Length       = 20;
 unsigned int piezoYevanim3Melody[]     = {F30,C25,C25,C25, C25,AS23,C25,CS26,AS23, 0, GS21,AS23,C25,CS26, DS28,CS26, C25,AS23,AS23,GS21};
 unsigned int piezoYevanim3Durations[]  = { 2 , 2 , 2 , 2 ,  4 , 4 ,  4 , 4 ,  2 ,  2,  4 ,  4 , 4 ,  4 ,   4 ,  4 ,    4 , 4 ,  1 ,  2};
@@ -43,7 +43,7 @@ unsigned int piezoYevanim5Durations[]  = { 4 ,  2 ,  2 ,  2 , 8,  4 ,  2 , 2 , 1
 
 const int CANDLES_ANGLE_START = 70;
 const int CANDLES_AMPLITUDE = 5;
-const int CANDLES_ANGLES[] = { 67, 72, 81, 83, 92, 95, 99, 105 };
+const int CANDLES_ANGLES[] = { 67, 70, 74, 78, 87, 91, 95, 102 };
 const int CANDLES_PINS[] = { LED1_PIN_VIN, LED2_PIN_VIN, LED3_PIN_VIN, LED4_PIN_VIN, LED5_PIN_VIN, LED6_PIN_VIN, LED7_PIN_VIN, LED8_PIN_VIN };
 LED candles[] = { led1, led2, led3, led4, led5, led6, led7, led8 };
 
@@ -53,8 +53,6 @@ int servo2Angle;
 
 /* This code sets up the essentials for your circuit to work. It runs first every time your circuit is powered with electricity. */
 void setup() {
-    // Setup Serial which is useful for debugging
-    // Use the Serial Monitor to view printed messages
     Serial.begin(9600);
     Serial.println("start");
     
@@ -65,12 +63,11 @@ void setup() {
     }
     servo_1.attach(SERVO_1_PIN);
     resetServos();
-    //playMusic();
 }
 
 void loop() {
     if (pushButton.onPress()) {
-        lightCandles(2);
+        lightCandles(8);
     }
 }
 
@@ -87,15 +84,13 @@ void resetServos() {
 }
 
 void moveServo1(int angle) {
-  log("moveServo1: ", angle);
-  //servo_1.attach(SERVO_1_PIN);
+  //log("moveServo1: ", angle);
   servo_1.write(angle);
   delay(100);
-  //servo_1.detach();
 }
 
 void lightCandles(int n) {
-    log("lightCandles: ", n);
+    //log("lightCandles: ", n);
     for (i=n-1; i>=0; i--) {
         lightCandle(i);
         delay(1000);
@@ -105,10 +100,8 @@ void lightCandles(int n) {
 }
 
 void lightCandle(int c) {
-    log("lightCandle: ", c);
-    
+    //log("lightCandle: ", c);
     // turn arm
-    //int angle = (int) CANDLES_ANGLE_START + c * CANDLES_AMPLITUDE;
     int angle = CANDLES_ANGLES[c];
     moveServo1(angle);
 
@@ -125,10 +118,6 @@ void lightCandle(int c) {
     lightLed(c);
 
     // up arm
-    /*for (int i=45; i>90; i++) {
-        servo_2.write(i);
-        delay(100);
-    }*/
     servo_2.write(servo_2RestPosition);
     delay(100);
     servo_2.detach();
@@ -143,16 +132,16 @@ void lightLed(int i) {
 }
 
 void playMusic() {
-  /*piezoSpeaker.playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
+  piezoSpeaker.playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
   piezoSpeaker.playMelody(piezoHanerot2Length, piezoHanerot2Melody, piezoHanerot2Durations); 
   piezoSpeaker.playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
   piezoSpeaker.playMelody(piezoHanerot2Length, piezoHanerot2Melody, piezoHanerot2Durations); 
-  delay(1000);*/
+  delay(1000);
   
   /*piezoSpeaker.playMelody(piezoMaoz1Length, piezoMaoz1Melody, piezoMaoz1Durations); 
-  delay(500);
+  delay(250);
   piezoSpeaker.playMelody(piezoMaoz1Length, piezoMaoz1Melody, piezoMaoz1Durations); 
-  delay(500); */
+  delay(1000);*/
 
   piezoSpeaker.playMelody(piezoYevanim1Length, piezoYevanim1Melody, piezoYevanim1Durations); 
   delay(500);
@@ -161,7 +150,7 @@ void playMusic() {
   piezoSpeaker.playMelody(piezoYevanim3Length, piezoYevanim3Melody, piezoYevanim3Durations); 
   delay(500);
   piezoSpeaker.playMelody(piezoYevanim4Length, piezoYevanim4Melody, piezoYevanim4Durations); 
-  delay(250);
+  delay(125);
   piezoSpeaker.playMelody(piezoYevanim5Length, piezoYevanim5Melody, piezoYevanim5Durations); 
 
 }
