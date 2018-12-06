@@ -50,6 +50,17 @@ LED candles[] = { led1, led2, led3, led4, led5, led6, led7, led8 };
 int i;
 //int servo1_angle;
 int servo2Angle;
+int rnd;
+
+// functions
+void resetServos();
+void lightCandles(int n);
+void moveServo1(int angle);
+void lightCandle(int c);
+void playMusic();
+void lightLed(int i);
+void flickerCandles(int n);
+
 
 /* This code sets up the essentials for your circuit to work. It runs first every time your circuit is powered with electricity. */
 void setup() {
@@ -63,11 +74,14 @@ void setup() {
     }
     servo_1.attach(SERVO_1_PIN);
     resetServos();
+
+    randomSeed(analogRead(0));
 }
 
 void loop() {
     if (pushButton.onPress()) {
-        lightCandles(8);
+        lightCandles(5);
+        flickerCandles(5);
     }
 }
 
@@ -103,6 +117,7 @@ void lightCandle(int c) {
     //log("lightCandle: ", c);
     // turn arm
     int angle = CANDLES_ANGLES[c];
+    //log("servo1 angle: ", angle);
     moveServo1(angle);
 
     // down arm
@@ -132,6 +147,7 @@ void lightLed(int i) {
 }
 
 void playMusic() {
+  //log("playMusic");
   piezoSpeaker.playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
   piezoSpeaker.playMelody(piezoHanerot2Length, piezoHanerot2Melody, piezoHanerot2Durations); 
   piezoSpeaker.playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
@@ -154,6 +170,23 @@ void playMusic() {
   piezoSpeaker.playMelody(piezoYevanim5Length, piezoYevanim5Melody, piezoYevanim5Durations); 
 
 }
+
+void flickerCandles(int n) {
+    for (i=n-1; i>=0; i--) {
+        lightLed(i);
+        
+    }
+
+    while (true) {
+        rnd = random(0,n);
+        //log("rnd:", rnd);
+        int pin = CANDLES_PINS[rnd];
+        digitalWrite(pin, LOW);
+        delay(25);
+        digitalWrite(pin, HIGH);
+        delay(random(0,8) * 40 * (8-n));
+    }
+}
 /**************** Utils functions *************************/
 
 void log(String str) {
@@ -171,48 +204,3 @@ void log(String str1, int num, String str2) {
   Serial.println(str2);
 }
 
-
-
-/*******************************************************
-
-*    Circuito.io is an automatic generator of schematics and code for off
-*    the shelf hardware combinations.
-
-*    Copyright (C) 2016 Roboplan Technologies Ltd.
-
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
-
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-
-*    You should have received a copy of the GNU General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*    In addition, and without limitation, to the disclaimers of warranties 
-*    stated above and in the GNU General Public License version 3 (or any 
-*    later version), Roboplan Technologies Ltd. ("Roboplan") offers this 
-*    program subject to the following warranty disclaimers and by using 
-*    this program you acknowledge and agree to the following:
-*    THIS PROGRAM IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, AND 
-*    WITHOUT WARRANTIES OF ANY KIND EITHER EXPRESS OR IMPLIED.  ROBOPLAN 
-*    HEREBY DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT 
-*    NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, TITLE, FITNESS 
-*    FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND THOSE ARISING BY 
-*    STATUTE OR FROM A COURSE OF DEALING OR USAGE OF TRADE. 
-*    YOUR RELIANCE ON, OR USE OF THIS PROGRAM IS AT YOUR SOLE RISK.
-*    ROBOPLAN DOES NOT GUARANTEE THAT THE PROGRAM WILL BE FREE OF, OR NOT 
-*    SUSCEPTIBLE TO, BUGS, SECURITY BREACHES, OR VIRUSES. ROBOPLAN DOES 
-*    NOT WARRANT THAT YOUR USE OF THE PROGRAM, INCLUDING PURSUANT TO 
-*    SCHEMATICS, INSTRUCTIONS OR RECOMMENDATIONS OF ROBOPLAN, WILL BE SAFE 
-*    FOR PERSONAL USE OR FOR PRODUCTION OR COMMERCIAL USE, WILL NOT 
-*    VIOLATE ANY THIRD PARTY RIGHTS, WILL PROVIDE THE INTENDED OR DESIRED
-*    RESULTS, OR OPERATE AS YOU INTENDED OR AS MAY BE INDICATED BY ROBOPLAN. 
-*    YOU HEREBY WAIVE, AGREE NOT TO ASSERT AGAINST, AND RELEASE ROBOPLAN, 
-*    ITS LICENSORS AND AFFILIATES FROM, ANY CLAIMS IN CONNECTION WITH ANY OF 
-*    THE ABOVE. 
-********************************************************/
