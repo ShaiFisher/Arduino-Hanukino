@@ -44,6 +44,7 @@ unsigned int piezoYevanim5Durations[]  = { 4 ,  2 ,  2 ,  2 , 8,  4 ,  2 , 2 , 1
 const int CANDLES_ANGLE_START = 70;
 const int CANDLES_AMPLITUDE = 5;
 const int CANDLES_ANGLES[] = { 67, 70, 74, 78, 87, 91, 95, 102 };
+const int CANDLES_BYTE_VALUES[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
 
 int i;
 byte ledsShiftByte = 0;
@@ -73,7 +74,7 @@ void setup() {
     pushButton.init();
 
     // init leds
-    pinMode(SHIFT_LATCH_PIN, OUTPUT);
+    pinMode(SHIFT_DATA_PIN, OUTPUT);
     pinMode(SHIFT_LATCH_PIN, OUTPUT);  
     pinMode(SHIFT_CLOCK_PIN, OUTPUT);
     
@@ -135,7 +136,7 @@ void lightCandle(int c) {
     delay(100);
 
     // light led
-    lightLedsUntil(c);
+    lightLed(c);
 
     // up arm
     servo_2.write(servo_2RestPosition);
@@ -146,17 +147,16 @@ void lightCandle(int c) {
 
 void lightLed(int i) {
   //log("lightLed: ", i);
-  //int pin = CANDLES_PINS[i];
-  //log("pin: ", pin);
-  //digitalWrite(pin, HIGH);
+  ledsShiftByte = ledsShiftByte | CANDLES_BYTE_VALUES[i];
+  //log("ledsShiftByte after: ", ledsShiftByte);
+  updateShiftRegister();
 }
 
-void lightLedsUntil(int i) {
-  //log("lightLed: ", i);
-  bitSet(ledsShiftByte, i);
-  digitalWrite(SHIFT_LATCH_PIN, LOW);
-  shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, ledsShiftByte);
-  digitalWrite(SHIFT_LATCH_PIN, HIGH);
+void updateShiftRegister()
+{
+   digitalWrite(SHIFT_LATCH_PIN, LOW);
+   shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, ledsShiftByte);
+   digitalWrite(SHIFT_LATCH_PIN, HIGH);
 }
 
 void playMusic() {
