@@ -44,10 +44,9 @@ unsigned int piezoYevanim5Durations[]  = { 4 ,  2 ,  2 ,  2 , 8,  4 ,  2 , 2 , 1
 const int CANDLES_ANGLE_START = 70;
 const int CANDLES_AMPLITUDE = 5;
 const int CANDLES_ANGLES[] = { 67, 70, 74, 78, 87, 91, 95, 102 };
-const int CANDLES_PINS[] = { LED1_PIN_VIN, LED2_PIN_VIN, LED3_PIN_VIN, LED4_PIN_VIN, LED5_PIN_VIN, LED6_PIN_VIN, LED7_PIN_VIN, LED8_PIN_VIN };
-LED candles[] = { led1, led2, led3, led4, led5, led6, led7, led8 };
 
 int i;
+byte ledsShiftByte = 0;
 //int servo1_angle;
 int servo2Angle;
 int rnd;
@@ -59,7 +58,11 @@ void moveServo1(int angle);
 void lightCandle(int c);
 void playMusic();
 void lightLed(int i);
+void lightLedsUntil(int i);
 void flickerCandles(int n);
+void log(String str);
+void log(String desc, int num);
+void log(String str1, int num, String str2);
 
 
 /* This code sets up the essentials for your circuit to work. It runs first every time your circuit is powered with electricity. */
@@ -69,9 +72,11 @@ void setup() {
     
     pushButton.init();
 
-    for (int i=0; i<8; i++) {
-      candles[i].off();
-    }
+    // init leds
+    pinMode(SHIFT_LATCH_PIN, OUTPUT);
+    pinMode(SHIFT_LATCH_PIN, OUTPUT);  
+    pinMode(SHIFT_CLOCK_PIN, OUTPUT);
+    
     servo_1.attach(SERVO_1_PIN);
     resetServos();
 
@@ -80,8 +85,8 @@ void setup() {
 
 void loop() {
     if (pushButton.onPress()) {
-        lightCandles(5);
-        flickerCandles(5);
+        lightCandles(8);
+        flickerCandles(8);
     }
 }
 
@@ -130,7 +135,7 @@ void lightCandle(int c) {
     delay(100);
 
     // light led
-    lightLed(c);
+    lightLedsUntil(c);
 
     // up arm
     servo_2.write(servo_2RestPosition);
@@ -141,9 +146,17 @@ void lightCandle(int c) {
 
 void lightLed(int i) {
   //log("lightLed: ", i);
-  int pin = CANDLES_PINS[i];
+  //int pin = CANDLES_PINS[i];
   //log("pin: ", pin);
-  digitalWrite(pin, HIGH);
+  //digitalWrite(pin, HIGH);
+}
+
+void lightLedsUntil(int i) {
+  //log("lightLed: ", i);
+  bitSet(ledsShiftByte, i);
+  digitalWrite(SHIFT_LATCH_PIN, LOW);
+  shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, ledsShiftByte);
+  digitalWrite(SHIFT_LATCH_PIN, HIGH);
 }
 
 void playMusic() {
@@ -180,11 +193,11 @@ void flickerCandles(int n) {
     while (true) {
         rnd = random(0,n);
         //log("rnd:", rnd);
-        int pin = CANDLES_PINS[rnd];
+        /*int pin = CANDLES_PINS[rnd];
         digitalWrite(pin, LOW);
         delay(25);
         digitalWrite(pin, HIGH);
-        delay(random(0,8) * 40 * (8-n));
+        delay(random(0,8) * 40 * (8-n));*/
     }
 }
 /**************** Utils functions *************************/
@@ -203,4 +216,3 @@ void log(String str1, int num, String str2) {
   Serial.print(num);
   Serial.println(str2);
 }
-

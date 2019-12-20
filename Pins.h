@@ -1,15 +1,20 @@
 #ifndef PINS_H
 #define PINS_H
 
-// 8 candles (middle one, Shmash, is always on
-#define LED1_PIN_VIN  9     // first candle, right side (in front)
+// 8 candles (middle one, Shamash is always on)
+// Shift Register sn74hc595
+#define SHIFT_DATA_PIN 2
+#define SHIFT_LATCH_PIN 3
+#define SHIFT_CLOCK_PIN 4
+
+/*#define LED1_PIN_VIN  9     // first candle, right side (in front)
 #define LED2_PIN_VIN  8
 #define LED3_PIN_VIN  7
 #define LED4_PIN_VIN  6
 #define LED5_PIN_VIN  5
 #define LED6_PIN_VIN  4
 #define LED7_PIN_VIN  3
-#define LED8_PIN_VIN  2
+#define LED8_PIN_VIN  2*/
 
 /*#define RGBLED_PIN_R	9
 #define RGBLED_PIN_G	6
