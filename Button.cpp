@@ -1,6 +1,6 @@
 #include "Button.h"
 
-#include <Arduino.h>
+//#include <Arduino.h>
 
 
 Button::Button(const int pin) : m_pin(pin)
@@ -120,5 +120,3 @@ bool Button::onRelease()
   return 0;
 
 }
-
-

@@ -46,14 +46,14 @@
 
 //RGBLed rgbLed(RGBLED_PIN_R,RGBLED_PIN_G,RGBLED_PIN_B);
 Button pushButton(PUSHBUTTON_PIN_1);
-LED led1(LED1_PIN_VIN);
+/*LED led1(LED1_PIN_VIN);
 LED led2(LED2_PIN_VIN);
 LED led3(LED3_PIN_VIN);
 LED led4(LED4_PIN_VIN);
 LED led5(LED5_PIN_VIN);
 LED led6(LED6_PIN_VIN);
 LED led7(LED7_PIN_VIN);
-LED led8(LED8_PIN_VIN);
+LED led8(LED8_PIN_VIN);*/
 
 Servo servo_1;
 Servo servo_2;

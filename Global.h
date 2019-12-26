@@ -56,14 +56,14 @@
 #include "Speaker.h"
 
 extern Button pushButton;
-extern LED led1;
+/*extern LED led1;
 extern LED led2;
 extern LED led3;
 extern LED led4;
 extern LED led5;
 extern LED led6;
 extern LED led7;
-extern LED led8;
+extern LED led8;*/
 extern Servo servo_1;
 extern Servo servo_2;
 extern Speaker piezoSpeaker;
