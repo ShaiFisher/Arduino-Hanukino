@@ -45,6 +45,7 @@ const int CANDLES_ANGLE_START = 70;
 const int CANDLES_AMPLITUDE = 5;
 const int CANDLES_ANGLES[] = { 67, 70, 74, 78, 87, 91, 95, 102 };
 const int CANDLES_BYTE_VALUES[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+//const int CANDLES_LOW_BYTE_VALUES[] = { 254, 253, 251, 247, 239, 223, 191, 121 }; 
 
 int i;
 byte ledsShiftByte = 0;
@@ -77,6 +78,8 @@ void setup() {
     pinMode(SHIFT_DATA_PIN, OUTPUT);
     pinMode(SHIFT_LATCH_PIN, OUTPUT);  
     pinMode(SHIFT_CLOCK_PIN, OUTPUT);
+    ledsShiftByte = 255;
+    updateShiftRegister();
     
     servo_1.attach(SERVO_1_PIN);
     resetServos();
@@ -86,8 +89,10 @@ void setup() {
 
 void loop() {
     if (pushButton.onPress()) {
-        lightCandles(8);
-        flickerCandles(8);
+        ledsShiftByte = 0;
+        updateShiftRegister();
+        lightCandles(5);
+        flickerCandles(5);
     }
 }
 
@@ -152,11 +157,11 @@ void lightLed(int i) {
   updateShiftRegister();
 }
 
-void updateShiftRegister()
-{
-   digitalWrite(SHIFT_LATCH_PIN, LOW);
-   shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, ledsShiftByte);
-   digitalWrite(SHIFT_LATCH_PIN, HIGH);
+void updateShiftRegister() {
+    //log("updateShiftRegister: ", ledsShiftByte);
+    digitalWrite(SHIFT_LATCH_PIN, LOW);
+    shiftOut(SHIFT_DATA_PIN, SHIFT_CLOCK_PIN, LSBFIRST, ledsShiftByte);
+    digitalWrite(SHIFT_LATCH_PIN, HIGH);
 }
 
 void playMusic() {
@@ -185,19 +190,19 @@ void playMusic() {
 }
 
 void flickerCandles(int n) {
-    for (i=n-1; i>=0; i--) {
-        lightLed(i);
-        
-    }
-
     while (true) {
+        // light leds 1..n
+        ledsShiftByte = CANDLES_BYTE_VALUES[n] - 1;   //example: 8 => 7 (111)
+        updateShiftRegister();
+
+        // shut down 1 random led
         rnd = random(0,n);
         //log("rnd:", rnd);
-        /*int pin = CANDLES_PINS[rnd];
-        digitalWrite(pin, LOW);
+        ledsShiftByte &= ~(1UL << rnd);   // ledsShiftByte & byte of all 1 except one bit
+        updateShiftRegister();
+
+        // wait a bit
         delay(25);
-        digitalWrite(pin, HIGH);
-        delay(random(0,8) * 40 * (8-n));*/
     }
 }
 /**************** Utils functions *************************/

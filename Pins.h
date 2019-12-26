@@ -19,9 +19,9 @@
 /*#define RGBLED_PIN_R	9
 #define RGBLED_PIN_G	6
 #define RGBLED_PIN_B	5*/
-#define PUSHBUTTON_PIN_1	10      // 1st leg: 5v; 2nd leg: I. 10k resistor to GND, II. pin 10
-#define SERVO_1_PIN	12
-#define SERVO_2_PIN	13
+#define PUSHBUTTON_PIN_1	13      // 1st leg: 5v; 2nd leg: I. 10k resistor to GND, II. pin 10
+#define SERVO_1_PIN	8
+#define SERVO_2_PIN	9
 #define PIEZOSPEAKER_PIN_SIG  11    // +: 5v; -: left leg of Transistor BC557
                                     // BC557:   Left: Piezzo -; 
                                     //          Mid: 1k resistor to pin 11
