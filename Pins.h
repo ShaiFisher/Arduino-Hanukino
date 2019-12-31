@@ -23,8 +23,9 @@
 #define SERVO_1_PIN	8
 #define SERVO_2_PIN	9
 #define PIEZOSPEAKER_PIN_SIG  11    // +: 5v; -: left leg of Transistor BC557
-                                    // BC557:   Left: Piezzo -; 
-                                    //          Mid: 1k resistor to pin 11
-                                    //          Right; GND
+                                    // BC557 (looking at flat side):
+                                    //   Left: Piezzo -; 
+                                    //   Mid: 1k resistor to pin 11
+                                    //   Right; GND
 
 #endif //PINS_H
