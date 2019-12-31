@@ -91,8 +91,9 @@ void loop() {
     if (pushButton.onPress()) {
         ledsShiftByte = 0;
         updateShiftRegister();
-        lightCandles(5);
-        flickerCandles(5);
+        lightCandles(8);
+        playMusic();
+        flickerCandles(8);
     }
 }
 
@@ -121,7 +122,6 @@ void lightCandles(int n) {
         delay(1000);
     }
     moveServo1(90);
-    playMusic();
 }
 
 void lightCandle(int c) {
@@ -157,6 +157,13 @@ void lightLed(int i) {
   updateShiftRegister();
 }
 
+void lightLedOnly(int i) {
+  //log("lightLed: ", i);
+  ledsShiftByte = CANDLES_BYTE_VALUES[i];
+  //log("ledsShiftByte after: ", ledsShiftByte);
+  updateShiftRegister();
+}
+
 void updateShiftRegister() {
     //log("updateShiftRegister: ", ledsShiftByte);
     digitalWrite(SHIFT_LATCH_PIN, LOW);
@@ -166,10 +173,10 @@ void updateShiftRegister() {
 
 void playMusic() {
   //log("playMusic");
-  piezoSpeaker.playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
-  piezoSpeaker.playMelody(piezoHanerot2Length, piezoHanerot2Melody, piezoHanerot2Durations); 
-  piezoSpeaker.playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
-  piezoSpeaker.playMelody(piezoHanerot2Length, piezoHanerot2Melody, piezoHanerot2Durations); 
+  playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
+  playMelody(piezoHanerot2Length, piezoHanerot2Melody, piezoHanerot2Durations); 
+  playMelody(piezoHanerot1Length, piezoHanerot1Melody, piezoHanerot1Durations);
+  playMelody(piezoHanerot2Length, piezoHanerot2Melody, piezoHanerot2Durations); 
   delay(1000);
   
   /*piezoSpeaker.playMelody(piezoMaoz1Length, piezoMaoz1Melody, piezoMaoz1Durations); 
@@ -177,15 +184,15 @@ void playMusic() {
   piezoSpeaker.playMelody(piezoMaoz1Length, piezoMaoz1Melody, piezoMaoz1Durations); 
   delay(1000);*/
 
-  piezoSpeaker.playMelody(piezoYevanim1Length, piezoYevanim1Melody, piezoYevanim1Durations); 
+  playMelody(piezoYevanim1Length, piezoYevanim1Melody, piezoYevanim1Durations); 
   delay(500);
-  piezoSpeaker.playMelody(piezoYevanim2Length, piezoYevanim2Melody, piezoYevanim2Durations); 
+  playMelody(piezoYevanim2Length, piezoYevanim2Melody, piezoYevanim2Durations); 
   delay(1000);
-  piezoSpeaker.playMelody(piezoYevanim3Length, piezoYevanim3Melody, piezoYevanim3Durations); 
+  playMelody(piezoYevanim3Length, piezoYevanim3Melody, piezoYevanim3Durations); 
   delay(500);
-  piezoSpeaker.playMelody(piezoYevanim4Length, piezoYevanim4Melody, piezoYevanim4Durations); 
+  playMelody(piezoYevanim4Length, piezoYevanim4Melody, piezoYevanim4Durations); 
   delay(125);
-  piezoSpeaker.playMelody(piezoYevanim5Length, piezoYevanim5Melody, piezoYevanim5Durations); 
+  playMelody(piezoYevanim5Length, piezoYevanim5Melody, piezoYevanim5Durations); 
 
 }
 
@@ -205,6 +212,40 @@ void flickerCandles(int n) {
         delay(25);
     }
 }
+
+void playMelody(unsigned int len, unsigned int *melody, unsigned int *noteDurations)
+{
+  // Based on https://www.arduino.cc/en/Tutorial/toneMelody
+  for (int thisNote = 0; thisNote < len; thisNote++) {
+  
+    // light led
+    int noteFreq = melody[thisNote];
+    int candle = 0;
+    if (noteFreq <= C13) {
+      candle = 0;
+    } else if (noteFreq <= D4) {
+      candle = 1;
+    } else if (noteFreq <= E4) {
+      candle = 2;
+    } else if (noteFreq <= F18) {
+      candle = 3;
+    } else if (noteFreq <= GS21) {
+      candle = 4;
+    } else if (noteFreq <= B4) {
+      candle = 5;
+    } else if (noteFreq <= CS26) {
+      candle = 6;
+    } else {
+      candle = 7;
+    }
+   
+    lightLedOnly(candle);
+
+    TimerFreeTone(PIEZOSPEAKER_PIN_SIG, melody[thisNote], 1000 / noteDurations[thisNote]); 
+    delay(50);
+  }
+}
+
 /**************** Utils functions *************************/
 
 void log(String str) {
